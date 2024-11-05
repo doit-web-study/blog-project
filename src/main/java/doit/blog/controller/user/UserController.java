@@ -1,12 +1,11 @@
 package doit.blog.controller.user;
 
+import doit.blog.controller.user.dto.UserIdResponse;
 import doit.blog.controller.user.dto.UserInfoResponse;
 import doit.blog.controller.user.dto.UserLoginRequest;
-import doit.blog.controller.user.dto.UserIdResponse;
 import doit.blog.controller.user.dto.UserSignUpRequest;
 import doit.blog.controller.user.dto.UserUpdateRequest;
 import doit.blog.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;

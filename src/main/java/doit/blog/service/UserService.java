@@ -19,7 +19,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     public void checkDuplicateId(String loginId) {
-        if(userRepository.existsByLoginId(loginId)) {
+        if (userRepository.existsByLoginId(loginId)) {
             throw new IllegalArgumentException("이미 사용중인 아이디입니다.");
         }
     }
