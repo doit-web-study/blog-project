@@ -1,11 +1,13 @@
 package doit.blog.controller.post;
 
+import doit.blog.controller.ListWrapper;
 import doit.blog.controller.post.dto.PostCreateRequest;
 import doit.blog.controller.post.dto.PostIdResponse;
 import doit.blog.controller.post.dto.PostInfoWithUserInfoResponse;
 import doit.blog.controller.post.dto.PostUpdateRequest;
 import doit.blog.service.PostService;
 import jakarta.servlet.http.HttpSession;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -45,5 +48,12 @@ public class PostController implements PostControllerDocs{
     @GetMapping("/{postId}")
     public PostInfoWithUserInfoResponse getPost(@PathVariable Long postId) {
         return postService.getPost(postId);
+    }
+
+    @GetMapping
+    public ListWrapper<PostInfoWithUserInfoResponse> getPosts(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) Long categoryId) {
+        return ListWrapper.of(postService.getPosts(keyword, categoryId));
     }
 }

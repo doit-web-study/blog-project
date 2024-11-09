@@ -1,5 +1,6 @@
 package doit.blog.controller.post;
 
+import doit.blog.controller.ListWrapper;
 import doit.blog.controller.post.dto.PostCreateRequest;
 import doit.blog.controller.post.dto.PostIdResponse;
 import doit.blog.controller.post.dto.PostInfoWithUserInfoResponse;
@@ -44,5 +45,16 @@ public interface PostControllerDocs {
     PostInfoWithUserInfoResponse getPost(
             @Schema(description = "게시글 식별 ID", example = "1")
             Long postId
+    );
+
+    @Operation(summary = "게시글 목록 조회", description = "게시글 목록을 조회한다.")
+    @ApiResponse(responseCode = "200", description = "게시글 목록 조회 성공")
+    @ApiResponse(responseCode = "400", description = "게시글 목록 조회 실패")
+    ListWrapper<PostInfoWithUserInfoResponse> getPosts(
+            @Schema(description = "제목 검색 키워드", example = "운동")
+            String keyword,
+
+            @Schema(description = "카테고리 식별 ID", example = "1")
+            Long categoryId
     );
 }

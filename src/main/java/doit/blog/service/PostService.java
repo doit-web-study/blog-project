@@ -10,6 +10,7 @@ import doit.blog.repository.post.Post;
 import doit.blog.repository.post.PostRepository;
 import doit.blog.repository.user.User;
 import doit.blog.repository.user.UserRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -60,5 +61,35 @@ public class PostService {
     public PostInfoWithUserInfoResponse getPost(Long postId) {
         Post post = postRepository.getById(postId);
         return PostInfoWithUserInfoResponse.from(post);
+    }
+
+    public List<PostInfoWithUserInfoResponse> getPosts(String keyword, Long categoryId) {
+        // 카테고리가 없는 경우, 전체 카테고리로 설정
+        boolean categoryCondition = categoryId != null;
+        Category category = categoryCondition ? categoryRepository.getById(categoryId) : null;
+
+        // 키워드가 없는 경우, 전체 키워드로 설정
+        boolean keywordCondition = !(keyword == null || keyword.isBlank());
+
+        List<Post> posts;
+
+        if (keywordCondition && categoryCondition) {
+            // 키워드, 카테고리 모두 있는 경우
+            keyword = "%" + keyword + "%";
+            posts = postRepository.findAllByTitleLikeAndCategory(keyword, category);
+        } else if (categoryCondition) {
+            // 카테고리만 있는 경우
+            posts = postRepository.findAllByCategory(category);
+        } else if (keywordCondition) {
+            // 키워드만 있는 경우
+            keyword = "%" + keyword + "%";
+            posts = postRepository.findAllByTitleLike(keyword);
+        } else {
+            posts = postRepository.findAll();
+        }
+
+        return posts.stream()
+                .map(PostInfoWithUserInfoResponse::from)
+                .toList();
     }
 }
