@@ -18,4 +18,18 @@ public record PostInfoWithUserInfoResponse(
         Long userId,
         String userNickname
 ) {
+    public static PostInfoWithUserInfoResponse from(Post post) {
+        return PostInfoWithUserInfoResponse.builder()
+                .postId(post.getId())
+                .postTitle(post.getTitle())
+                .postContent(post.getContent())
+                .postImage(post.getImage())
+                .likeCount(post.getLikeCount())
+                .createdAt(post.getCreatedAt())
+                .modifiedAt(post.getModifiedAt())
+                .categoryType(post.getCategory().getType())
+                .userId(post.getUser().getId())
+                .userNickname(post.getUser().getNickname())
+                .build();
+    }
 }
