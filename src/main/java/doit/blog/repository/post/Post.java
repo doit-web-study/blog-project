@@ -1,17 +1,18 @@
 package doit.blog.repository.post;
 
-import doit.blog.controller.post.dto.PostUpdateRequest;
 import doit.blog.repository.BaseEntity;
 import doit.blog.repository.category.Category;
 import doit.blog.repository.user.User;
+import doit.blog.repository.userlikepost.UserLikePost;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -41,12 +42,15 @@ public class Post extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Category category;
 
+    @OneToMany(mappedBy = "post")
+    private List<UserLikePost> userLikePosts;
+
     @Builder
-    private Post(String title, String content, String image, User user, Category category) {
+    private Post(String title, String content, String image, User user, Integer likeCount, Category category) {
         this.title = title;
         this.content = content;
         this.image = image;
-        this.likeCount = 0;
+        this.likeCount = likeCount;
         this.user = user;
         this.category = category;
     }
@@ -58,6 +62,7 @@ public class Post extends BaseEntity {
                 .image(image)
                 .user(user)
                 .category(category)
+                .likeCount(0)
                 .build();
     }
 
@@ -69,5 +74,9 @@ public class Post extends BaseEntity {
 
     public boolean isWrittenBy(User user) {
         return this.user.equals(user);
+    }
+
+    public void like() {
+        this.likeCount++;
     }
 }

@@ -1,12 +1,16 @@
 package doit.blog.repository.user;
 
 import doit.blog.repository.BaseEntity;
+import doit.blog.repository.post.Post;
+import doit.blog.repository.userlikepost.UserLikePost;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,8 +19,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Table(name = "\"user\"")
-public class User extends BaseEntity{
+@Table(name = "users")
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,6 +39,12 @@ public class User extends BaseEntity{
     private String password;
 
     private String phoneNumber;
+
+    @OneToMany(mappedBy = "user")
+    private List<Post> posts;
+
+    @OneToMany(mappedBy = "user")
+    private List<UserLikePost> userLikePosts;
 
     @Builder
     private User(String name, String nickname, String loginId, String password, String phoneNumber) {

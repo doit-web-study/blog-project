@@ -7,7 +7,6 @@ import doit.blog.controller.post.dto.PostInfoWithUserInfoResponse;
 import doit.blog.controller.post.dto.PostUpdateRequest;
 import doit.blog.service.PostService;
 import jakarta.servlet.http.HttpSession;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/posts")
-public class PostController implements PostControllerDocs{
+public class PostController implements PostControllerDocs {
     private final HttpSession session;
     private final PostService postService;
 
@@ -55,5 +54,11 @@ public class PostController implements PostControllerDocs{
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) Long categoryId) {
         return ListWrapper.of(postService.getPosts(keyword, categoryId));
+    }
+
+    @PostMapping("/{postId}/likes")
+    public void likePost(@PathVariable Long postId) {
+        Long userId = (Long) session.getAttribute("userId");
+        postService.likePost(postId, userId);
     }
 }

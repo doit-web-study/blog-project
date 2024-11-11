@@ -10,17 +10,22 @@ import doit.blog.repository.post.Post;
 import doit.blog.repository.post.PostRepository;
 import doit.blog.repository.user.User;
 import doit.blog.repository.user.UserRepository;
+import doit.blog.repository.userlikepost.UserLikePost;
+import doit.blog.repository.userlikepost.UserLikePostRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
+    private final UserLikePostRepository userLikePostRepository;
 
     public PostIdResponse createPost(PostCreateRequest request, Long userId) {
         User user = userRepository.getById(userId);
@@ -91,5 +96,20 @@ public class PostService {
         return posts.stream()
                 .map(PostInfoWithUserInfoResponse::from)
                 .toList();
+    }
+
+    public void likePost(Long postId, Long userId) {
+        Post post = postRepository.getById(postId);
+        User user = userRepository.getById(userId);
+
+        if (userLikePostRepository.existsByUserAndPost(user, post)) {
+            throw new IllegalArgumentException("이미 좋아요를 누른 게시글입니다.");
+        }
+
+        UserLikePost userLikePost = UserLikePost.create(user, post);
+        post.like();
+
+        userLikePostRepository.save(userLikePost);
+        postRepository.save(post);
     }
 }

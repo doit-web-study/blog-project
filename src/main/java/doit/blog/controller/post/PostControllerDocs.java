@@ -57,4 +57,12 @@ public interface PostControllerDocs {
             @Schema(description = "카테고리 식별 ID", example = "1")
             Long categoryId
     );
+
+    @Operation(summary = "게시글 좋아요", description = "게시글에 좋아요를 한다.")
+    @ApiResponse(responseCode = "200", description = "게시글 좋아요 성공")
+    @ApiResponse(responseCode = "400", description = "게시글 좋아요 실패")
+    void likePost(
+            @Schema(description = "게시글 식별 ID", example = "1")
+            Long postId
+    );
 }
